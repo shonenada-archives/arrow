@@ -1,7 +1,11 @@
-(ns arrow.core)
+(ns arrow.core
+  (:use [ring.adapter.jetty]
+        [arrow.routes])
+  (:require [compojure.handler :as handler]))
 
 (defn shot-arrow [& args]
-  (println "Hello, World!"))
+  (def app (handler/api app-routes))
+  (run-jetty app {:port 3000}))
 
 (defn -main [& args]
   (shot-arrow))
