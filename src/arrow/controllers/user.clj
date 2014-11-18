@@ -15,11 +15,13 @@
               :password (utils/hash-str password)
               :email email
               :nickname nickname}]
-    (if-let [user-by-username (user-model/get-by-username username)]
-      (response {:success false :messages ["username exists"]})
-      (if-let [user-by-nickname (user-model/get-by-nickname nickname)]
-        (response {:success false :messages ["nickname exists"]})
-        (if-let [user-by-email (user-model/get-by-email email)]
-          (response {:success false :messages ["email exists"]})
-          (let [created-user (user-model/create user)]
-            (response {:success true :uid (get created-user :id)})))))))
+    (if (or (empty? username) (empty? password) (empty? email) (empty? nickname))
+      (response {:succsss false :messages ["fields required"]})
+      (if-let [user-by-username (user-model/get-by-username username)]
+        (response {:success false :messages ["username exists"]})
+        (if-let [user-by-nickname (user-model/get-by-nickname nickname)]
+          (response {:success false :messages ["nickname exists"]})
+          (if-let [user-by-email (user-model/get-by-email email)]
+            (response {:success false :messages ["email exists"]})
+            (let [created-user (user-model/create user)]
+              (response {:success true :uid (get created-user :id)}))))))))
