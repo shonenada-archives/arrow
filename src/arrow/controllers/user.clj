@@ -25,3 +25,15 @@
             (response {:success false :messages ["email exists"]})
             (let [created-user (user-model/create user)]
               (response {:success true :uid (get created-user :id)}))))))))
+
+(defn sign-in [request]
+  (let [json-params (:json-params request)
+        username (get json-params "username")
+        password (get json-params "password")]
+    (if (or (empty? username) (empty? password))
+      (response {:success false :messages ["fields required"]})
+      (if-let [user (user-model/get-by-username username)]
+        (if (user-model/check-password user password)
+          (response {:success true :messages ["login success"]})
+          (response {:success false :messages ["wrong username or password."]}))
+        (response {:success false :messages ["wrong username or password."]})))))

@@ -2,8 +2,7 @@
   (:use [korma.core]
         [arrow.database])
   (:require [arrow.utils.common :as utils]
-            [clojure.tools.logging :as log]
-            ))
+            [clojure.tools.logging :as log]))
 
 (defonce ^:const db-user-normal 0)
 (defonce ^:const db-user-inactive 1)
@@ -53,3 +52,7 @@
                       :state db-user-inactive)
         {id :generated_key} (insert users (values record))]
     (get-by-id id)))
+
+(defn check-password
+  [user raw-passwd]
+  (utils/chk-hash raw-passwd (:password user)))
