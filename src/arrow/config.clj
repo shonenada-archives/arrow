@@ -2,6 +2,9 @@
   (:use [environ.core :refer [env]]
         [arrow.utils.common :refer [->int]]))
 
+(defonce cookie-age (* 24 30 60 60))
+(defonce cookie-prefix "letters_")
+
 (defonce web-host (env :arrow-web-host "0.0.0.0"))
 (defonce web-port (->int (env :arrow-web-port "3000")))
 (defonce secret-key (env :arrow-secret-key))
