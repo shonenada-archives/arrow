@@ -34,6 +34,8 @@
       (response {:success false :messages ["fields required"]})
       (if-let [user (user-model/get-by-username username)]
         (if (user-model/check-password user password)
-          (response {:success true :messages ["login success"]})
+          (let [token utils/gen-token
+                resp (response {:success true :messages ["login success"]})]
+            resp)
           (response {:success false :messages ["wrong username or password."]}))
         (response {:success false :messages ["wrong username or password."]})))))
