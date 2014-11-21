@@ -1,5 +1,10 @@
 (ns arrow.utils.common
+  (:require [clojure.data.generators :as dg :only [uuid]])
   (:import [org.mindrot.jbcrypt BCrypt]))
+
+(defn bytes? [x]
+  (= (Class/forName "[B")
+     (.getClass x)))
 
 (defn ->int [s]
   (try 
@@ -30,3 +35,7 @@
 (defn chk-hash
   [raw hash-str]
   (BCrypt/checkpw raw hash-str))
+
+(defn gen-token
+  []
+  dg/uuid)
