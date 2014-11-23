@@ -42,11 +42,11 @@
     (.init cipher mode key-spec)
     cipher))
 
-(defn aes-encrypt [plain-text key]
+(defn aes-encrypt [plain-text encrypt-key]
   (let [text-bytes (.getBytes plain-text "UTF-8")
-        cipher (get-cipher Cipher/ENCRYPT_MODE key)]
+        cipher (get-cipher Cipher/ENCRYPT_MODE encrypt-key)]
     (encode-base64-bytes (.doFinal cipher text-bytes))))
 
-(defn aes-decrypt [cipher-text key]
-  (let [cipher (get-cipher Cipher/DECRYPT_MODE key)]
+(defn aes-decrypt [cipher-text encrypt-key]
+  (let [cipher (get-cipher Cipher/DECRYPT_MODE encrypt-key)]
     (String. (.doFinal cipher (decode-base64-bytes cipher-text)))))

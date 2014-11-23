@@ -1,7 +1,6 @@
 (ns arrow.utils.cookies
   (:require [arrow.config :as config]
-            [arrow.utils.cipher :only [aes-encrypt]]
-            ))
+            [arrow.utils.cipher :as cipher :only [aes-encrypt]]))
 
 (defn ->cookie [value]
   {:value value
@@ -11,11 +10,12 @@
 (defn gen-cookie [input]
   (-> input
       str
-      aes-encrypt
+      (cipher/aes-encrypt config/cookie-key)
       ->cookie))
 
-(defn add-cookies [req resp key value]
-  (let [cookie-name (str config/cookie-prefix key)
+(defn add-cookies [req resp key-n value]
+  (let [key-name (name key-n)
+        cookie-name (str config/cookie-prefix key-name)
         cookie {cookie-name (gen-cookie value)}
         cookies (req :cookies)]
     (if-let [old-cookie (-> cookies (get cookie-name) :value)]
@@ -23,8 +23,8 @@
     (let [insert-cookies (conj cookies cookie)]
       (assoc resp :cookies insert-cookies))))
 
-(defn delete-cookie [req resp key]
-  (let [cookie-name (str config/cookie-prefix key)
+(defn delete-cookie [req resp key-name]
+  (let [cookie-name (str config/cookie-prefix key-name)
         cookies (req :cookies)]
     (if-let [cookie (-> cookies (get cookie-name) :value)]
       (dissoc cookies cookie-name))

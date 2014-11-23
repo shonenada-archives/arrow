@@ -16,6 +16,16 @@
     (catch Exception e
       nil)))
 
+(defn ->long [s]
+  (try
+    (cond
+      (string? s) (Long/parseLong s)
+      (instance? Integer s) (s)
+      (instance? Long s) (s)
+      :else nil)
+    (catch Exception e
+      nil)))
+
 (defn now
   {:tag java.util.Date}
   []
