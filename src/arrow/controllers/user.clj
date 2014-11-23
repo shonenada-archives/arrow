@@ -3,7 +3,8 @@
   (:require [arrow.models.user :as user-model]
             [clojure.tools.logging :as log]
             [clojure.data.json :as json]
-            [arrow.utils.common :as utils]))
+            [arrow.utils.common :as utils]
+            [arrow.utils.cookies :as cookies]))
 
 (defn sign-up [request]
   (let [json-params (:json-params request)
@@ -36,6 +37,6 @@
         (if (user-model/check-password user password)
           (let [token utils/gen-token
                 resp (response {:success true :messages ["login success"]})]
-            resp)
+            (cookies/add-cookies request resp :username username))
           (response {:success false :messages ["wrong username or password."]}))
         (response {:success false :messages ["wrong username or password."]})))))
