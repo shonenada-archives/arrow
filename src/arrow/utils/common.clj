@@ -37,7 +37,7 @@
   ([size]
    (BCrypt/gensalt size)))
 
-(defn hash-str
+(defn hash-pw
   [raw-str]
   (let [salt (gen-salt)]
    (BCrypt/hashpw raw-str salt)))
@@ -46,6 +46,5 @@
   [raw hash-str]
   (BCrypt/checkpw raw hash-str))
 
-(defn gen-token
-  []
+(defn uuid []
   dg/uuid)

@@ -1,5 +1,6 @@
 (ns arrow.utils.cookies_test
-  (:use [arrorw.utils.cookies])
+  (:use [clojure.test]
+        [arrow.utils.cookies])
   (:require [arrow.config :as config]))
 
 (deftest test->cookie

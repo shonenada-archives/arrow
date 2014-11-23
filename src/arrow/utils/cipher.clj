@@ -1,5 +1,5 @@
 (ns arrow.utils.cipher
-  (:require [arrow.utils.common :only [bytes?]])
+  (:use [arrow.utils.common :as u])
   (:import [org.apache.commons.codec.binary Base64]
            [java.security MessageDigest SecureRandom]
            [javax.crypto Cipher KeyGenerator SecretKey]
@@ -50,3 +50,8 @@
 (defn aes-decrypt [cipher-text encrypt-key]
   (let [cipher (get-cipher Cipher/DECRYPT_MODE encrypt-key)]
     (String. (.doFinal cipher (decode-base64-bytes cipher-text)))))
+
+(defn gen-token [req]
+  (let [remote-addr (:remote-addr req)
+        raw-token (str remote-addr u/uuid u/now)]
+    (aes-encrypt raw-token)))
