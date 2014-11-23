@@ -1,5 +1,6 @@
 (ns arrow.utils.cipher
-  (:use [arrow.utils.common :as u])
+  (:use [arrow.utils.common :as u]
+        [arrow.config :as config])
   (:import [org.apache.commons.codec.binary Base64]
            [java.security MessageDigest SecureRandom]
            [javax.crypto Cipher KeyGenerator SecretKey]
@@ -54,4 +55,4 @@
 (defn gen-token [req]
   (let [remote-addr (:remote-addr req)
         raw-token (str remote-addr u/uuid u/now)]
-    (aes-encrypt raw-token)))
+    (aes-encrypt raw-token config/secret-key)))
