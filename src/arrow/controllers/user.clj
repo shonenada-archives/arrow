@@ -4,6 +4,7 @@
             [clojure.tools.logging :as log]
             [clojure.data.json :as json]
             [arrow.utils.common :as utils]
+            [arrow.utils.cipher :as cipher]
             [arrow.utils.cookies :as cookies]))
 
 (defn sign-up [request]
@@ -13,7 +14,7 @@
         email (get json-params "email")
         nickname (get json-params "nickname")
         user {:username username
-              :password (utils/hash-str password)
+              :password (utils/hash-pw password)
               :email email
               :nickname nickname}]
     (if (or (empty? username) (empty? password) (empty? email) (empty? nickname))
@@ -35,8 +36,10 @@
       (response {:success false :messages ["fields required"]})
       (if-let [user (user-model/get-by-username username)]
         (if (user-model/check-password user password)
-          (let [token utils/gen-token
+          (let [token (cipher/gen-token request)
                 resp (response {:success true :messages ["login success"]})]
-            (cookies/add-cookies request resp :username username))
+            (user-model/set-token user token)
+            (cookies/add-cookies request resp "token" token)
+            (cookies/add-cookies request resp "username" username))
           (response {:success false :messages ["wrong username or password."]}))
         (response {:success false :messages ["wrong username or password."]})))))

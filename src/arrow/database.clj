@@ -7,7 +7,7 @@
 
 (declare users)
 
-;; fields: :id :username :password :nickname :email :created :state
+;; fields: :id :username :password :nickname :email :token :created :state
 (defentity users
   (pk :id)
   (table :users)
