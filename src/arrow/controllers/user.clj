@@ -39,16 +39,25 @@
           (let [token (cipher/gen-token request)
                 user-info (dissoc user :password :token :created)
                 resp (response {:success true
-                                :messages ["login success"]
-                                :info user})]
+                                :messages ["Login Successfully"]
+                                :info user-info})]
             (user-model/set-token user token)
-            (cookies/add-cookies request resp "token" token)
-            (cookies/add-cookies request resp "username" username))
+            (-> resp
+                (cookies/add-cookies request "token" token)
+                (cookies/add-cookies request "username" username)))
           (response {:success false :messages ["wrong username or password."]}))
         (response {:success false :messages ["wrong username or password."]})))))
 
+(defn sign-out [request]
+  (let [resp (response {:success true
+                        :message ["Logout Successfully"]})]
+    (-> resp
+        (cookies/delete-cookie request "token")
+        (cookies/delete-cookie request "username"))))
+
 (defn current-user [request]
-  (let [username (cookies/get-cookie request "username")]
+  (if-let [username (cookies/get-cookie request "username")]
     (if-let [user (user-model/get-by-username username)]
       (response (dissoc user :password :token :created))
-      (response nil))))
+      (response nil))
+    (response nil)))

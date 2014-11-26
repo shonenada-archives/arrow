@@ -13,6 +13,7 @@
   (GET "/account" [request] user-controller/current-user)
   (POST "/account/signin" [request] user-controller/sign-in)
   (POST "/account/signup" [request] user-controller/sign-up)
+  (POST "/account/signout" [request] user-controller/sign-out)
 
   (route/resources "/")
   (route/not-found (page-not-found)))
