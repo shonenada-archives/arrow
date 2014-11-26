@@ -10,6 +10,7 @@
 (defroutes app-routes
   (GET "/" [request] index-controller/index)
 
+  (GET "/account" [request] user-controller/current-user)
   (POST "/account/signin" [request] user-controller/sign-in)
   (POST "/account/signup" [request] user-controller/sign-up)
 

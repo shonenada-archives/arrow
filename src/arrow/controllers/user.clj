@@ -37,9 +37,18 @@
       (if-let [user (user-model/get-by-username username)]
         (if (user-model/check-password user password)
           (let [token (cipher/gen-token request)
-                resp (response {:success true :messages ["login success"]})]
+                user-info (dissoc user :password :token :created)
+                resp (response {:success true
+                                :messages ["login success"]
+                                :info user})]
             (user-model/set-token user token)
             (cookies/add-cookies request resp "token" token)
             (cookies/add-cookies request resp "username" username))
           (response {:success false :messages ["wrong username or password."]}))
         (response {:success false :messages ["wrong username or password."]})))))
+
+(defn current-user [request]
+  (let [username (cookies/get-cookie request "username")]
+    (if-let [user (user-model/get-by-username username)]
+      (response (dissoc user :password :token :created))
+      (response nil))))

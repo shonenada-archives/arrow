@@ -13,6 +13,13 @@
       (cipher/aes-encrypt config/cookie-key)
       ->cookie))
 
+(defn get-cookie [req key-n]
+  (let [key-name (name key-n)
+        cookie-name (str config/cookie-prefix key-name)
+        cookies (req :cookies)
+        cookie (-> cookies (get cookie-name) :value)]
+    (str (cipher/aes-decrypt cookie config/cookie-key))))
+
 (defn add-cookies [req resp key-n value]
   (let [key-name (name key-n)
         cookie-name (str config/cookie-prefix key-name)
