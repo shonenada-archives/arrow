@@ -2,7 +2,8 @@
   (:use [compojure.core])
   (:require [compojure.route :as route]
             [arrow.controllers.index :as index-controller]
-            [arrow.controllers.user :as user-controller]))
+            [arrow.controllers.user :as user-controller]
+            [arrow.controllers.letter :as letter-controller]))
 
 (defn page-not-found []
   "Page not found.")
@@ -14,6 +15,8 @@
   (POST "/account/signin" [request] user-controller/sign-in)
   (POST "/account/signup" [request] user-controller/sign-up)
   (POST "/account/signout" [request] user-controller/sign-out)
+
+  (POST "/account/send" [request] letter-controller/send-letter)
 
   (route/resources "/")
   (route/not-found (page-not-found)))
