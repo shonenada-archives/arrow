@@ -20,3 +20,9 @@
                       :state db-letter-sent)
         {id :generated_key} (insert letters (values record))]
     (get-by-id id)))
+
+(defn get-by-uid [uid]
+  (select letters (where {:uid uid})))
+
+(defn get-by-toid [uid]
+  (select letters (where {:to_id uid})))

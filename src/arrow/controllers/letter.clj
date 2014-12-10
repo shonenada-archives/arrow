@@ -19,3 +19,21 @@
           (response {:success true}))
         (response nil))
       (response {:success false :messages ["Target username is not exists"]}))))
+
+(defn get-letters [request]
+  (let [json-params (:json-params request)
+        current-username (cookies/get-cookie request "username")]
+    (if-let [current-user (user-model/get-by-username current-username)]
+      (let [uid (current-user :id)
+            letters (letter-model/get-by-uid uid)]
+        (response {:success true :data letters}))
+      (response {:success false}))))
+
+(defn get-inbox [request]
+  (let [json-params (:json-params request)
+        current-username (cookies/get-cookie request "username")]
+    (if-let [current-user (user-model/get-by-username current-username)]
+      (let [uid (current-user :id)
+            letters (letter-model/get-by-toid uid)]
+        (response {:success true :data letters}))
+      (response {:success false}))))

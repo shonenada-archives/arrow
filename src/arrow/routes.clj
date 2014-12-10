@@ -17,6 +17,8 @@
   (POST "/account/signout" [request] user-controller/sign-out)
 
   (POST "/account/send" [request] letter-controller/send-letter)
+  (GET "/account/letters" [request] letter-controller/get-letters)
+  (GET "/account/inbox" [request] letter-controller/get-inbox)
 
   (route/resources "/")
   (route/not-found (page-not-found)))
